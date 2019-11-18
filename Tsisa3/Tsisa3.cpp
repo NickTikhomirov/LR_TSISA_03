@@ -1,10 +1,11 @@
 ﻿#include <iostream>
 #include<cmath>
 #include <random>
+#include <iomanip>
 
 
-double Tmin = 0.00001;
-double Tmax = 90000;
+double Tmin = 0.01;
+double Tmax = 10000;
 double A = 7;
 double B = 10;
 
@@ -37,22 +38,34 @@ double getValueFor(double x, mode m) {
 
 int main() {
 	for (mode a : {unimodal, multimodal}) {
-		
-		double x1 = generateRandom();
-		double f1 = getValueFor(x1, a);
+		int N = 0;
+		double x1 = INFINITY;
+			//generateRandom();
+		double f1 = INFINITY;
+			//getValueFor(x1, a);
 		double Ti = Tmax;
+		std::cout << std::fixed << std::setprecision(4) << "| N| \t   Ti\t| \tx\t| \tf \t\tP\n";
 		while (Ti > Tmin) {
+			N++;
 			double x2 = generateRandom();
 			double f2 = getValueFor(x2, a);
 			double df = f2 - f1;
-			if(df>0 && generateRaw()>exp(-df/Ti)) {
+			std::cout << std::fixed << std::setprecision(4) << "| " << N << "| \t " << Ti << "| \t";
+			std::cout<< x2 << "| \t" << f2;
+			double P = exp(-df / Ti);
+			std::cout << "| \t" << (P>1?1:P) << "| \t ";
+			if(df>0 && generateRaw()>P) {
+				std::cout << "N \n";
 				//комментарий, чтобы эта часть кода не выглядела незавершённой
 			} else {
 				x1 = x2;
 				f1 = f2;
+				std::cout << "Y \n";
 			}
 			Ti *= 0.95;
 		}
-		std::cout << x1 << std::endl << f1 << std::endl;
+		std::cout << "\n";
+		std::cout << "Result: x=" << x1 << ", f(x)=" << f1 << std::endl << std::endl;
+		//std::cout << x1 << std::endl << f1 << std::endl;
 	}
 }
